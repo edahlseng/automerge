@@ -299,9 +299,30 @@ sequence number stored in the local vector clock (`clock` described above). If
 every sequence number satisfies this condition, then the change is considered
 _causally ready_.
 
+### Applying a change
+
+First, `states` is updated by appending the change and its transitive deps to the change's actorID in `states`
+
+Then each operation is applied. How operations are handled depends on what the operation is:
+* Make (`makeMap`, `makeTable`, `makeList`, `makeText`): Creates a new object to set in `byObject`, with the objectId specified in the operation
+* Insert (`ins`): Updates `byObject` by appending the operation to `_following`, updating the maxElem, and inserting the element
+* Assign: updates `byObject`
+
+The change is appended to `history`.
+
+apply all operations
+There are only six different operations, as mentioned above. Will describe each one in detail below.
+
+####
+
 ### TODO
 
 This section is still a work in progress. More to come!
+
+Frontend vs Backend
+-------------------
+
+Some steps are longer, so it takes a while... frontend records diffs to make things faster
 
 
 Querying the local state
